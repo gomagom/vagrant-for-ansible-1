@@ -1,7 +1,7 @@
 - name: provisioning
   hosts: all
-  become: yes
-  vars:
+  become: yes # root権限で実行
+  vars:   # 変数を定義
     ssh_hostname: target1
     user: vagrant
     home: /home/{{ user }}
