@@ -1,0 +1,34 @@
+- name: provisioning
+  hosts: all
+  become: yes
+  vars:
+    ssh_hostname: target1
+    user: vagrant
+    home: /home/{{ user }}
+    key_file: "{{ ssh_hostname }}_private_key"
+    key_path: "{{ home }}/.ssh/{{ key_file }}"
+  tasks:
+    - name: apt update and upgrade
+      apt:
+        update_cache: yes
+        upgrade: yes
+    - name: set timezone to Asia/Tokyo
+      timezone:
+        name: Asia/Tokyo
+    - name: install language-pack-ja
+      apt:
+        name: language-pack-ja
+    - name: change locale
+      command: localectl set-locale LANG=ja_JP.UTF-8
+    - name: change ssh key permissions
+      file:
+        path: "{{ key_path }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0600
+    - name: copy ssh config file
+      template:
+        src: /vagrant/playbooks/config.j2
+        dest: "{{ home }}/.ssh/config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
