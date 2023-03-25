@@ -8,18 +8,12 @@
     key_file: "{{ ssh_hostname }}_private_key"
     key_path: "{{ home }}/.ssh/{{ key_file }}"
   tasks:
-    - name: apt update and upgrade
+    - name: apt update
       apt:
         update_cache: yes
-        upgrade: yes
     - name: set timezone to Asia/Tokyo
       timezone:
         name: Asia/Tokyo
-    - name: install language-pack-ja
-      apt:
-        name: language-pack-ja
-    - name: change locale
-      command: localectl set-locale LANG=ja_JP.UTF-8
     - name: change ssh key permissions
       file:
         path: "{{ key_path }}"
